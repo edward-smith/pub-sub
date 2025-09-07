@@ -3,8 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
-	"os/signal"
+
 	"github.com/edward-smith/pub-sub/internal/pubsub"
 	"github.com/edward-smith/pub-sub/internal/routing"
 
@@ -20,16 +19,16 @@ func main() {
 	fmt.Printf("connection successful...")
 	defer conn.Close()
 
-	chan, err := conn.Channel()
+	ch, err := conn.Channel()
 	if err != nil {
 		log.Fatalf("Failed to open a channel: %v", err)
 	}
-	defer chan.Close()
+	defer ch.Close()
 
 	err = pubsub.PublishJSON(
-		chan,
+		ch,
 		routing.ExchangePerilDirect,
-		routing.PauseKey, 
+		routing.PauseKey,
 		routing.PlayingState{
 			IsPaused: true,
 		},
